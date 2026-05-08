@@ -75,7 +75,11 @@ claude mcp remove ridango-kb-2
 
 ## Wire into Claude Desktop
 
-Edit the config file:
+> **Heads-up on the UI.** Claude Desktop's **Settings → Extensions** panel is only for Anthropic-curated published servers — it can't add a custom local server like this one. The **Connectors** menu in the chat (`+` button) is read-only; it shows what's already connected, it doesn't add new ones. For custom local stdio servers, you edit the JSON config. The easiest way: **Settings → Developer → Edit Config**, which opens the right file directly.
+>
+> **Claude.ai (web) won't work** with this server at all. The web client can't spawn local processes — it only supports remote (HTTPS) MCP endpoints. Use Claude Desktop or Claude Code.
+
+The config file is at:
 
 - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
@@ -96,11 +100,13 @@ If the file already has an `mcpServers` block, merge this entry into it:
 }
 ```
 
-Restart Claude Desktop. The eight tools below are now callable in any chat.
+Restart Claude Desktop. The eight tools below are now callable in any chat — Claude picks the right one automatically based on your question.
 
 > Why `env` on Desktop but not Code? Claude Desktop launches the server from a fresh process tree without your shell's working directory, so `.env` doesn't get auto-loaded — you set credentials inline. Claude Code spawns from a context that picks up the repo's `.env`.
 
 ## Tools exposed
+
+These are the eight capabilities the MCP server provides to Claude once connected. You don't call them by hand — Claude picks the right one based on your question. They're listed here so you know what kinds of questions the server can answer.
 
 | Tool | Purpose |
 |---|---|
