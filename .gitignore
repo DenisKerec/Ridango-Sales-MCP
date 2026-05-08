@@ -1,0 +1,26 @@
+# Secrets
+.env
+.env.local
+.env.credentials
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# uv
+uv.lock
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Local data — gitignored, lives outside the repo
+kb2_data/
