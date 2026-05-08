@@ -48,9 +48,39 @@ uv run kb2 stats                                     # → ~2,300 entities, ~6,4
 uv run kb2 ask "who supplies AVL to STB Bucuresti?"  # → cited answer
 ```
 
+## Wire into Claude Code
+
+One command — replace the path with the absolute path to your clone:
+
+```bash
+claude mcp add ridango-kb-2 --scope user -- \
+  uv --directory /abs/path/to/Ridango-Sales-MCP run kb2 mcp serve
+```
+
+Verify it registered and is reachable:
+
+```bash
+claude mcp list
+# expected line:
+# ridango-kb-2: uv --directory /abs/path/to/Ridango-Sales-MCP run kb2 mcp serve - ✓ Connected
+```
+
+That's it. Restart any open Claude Code session (or run `/mcp` to reload), then ask a natural-language question — Claude will pick the right `ridango-kb-2` tool automatically. The server reads `KB2_DATABASE_URL` from the `.env` next to the repo, so you don't need to put credentials into the Claude config.
+
+To remove or update later:
+
+```bash
+claude mcp remove ridango-kb-2
+```
+
 ## Wire into Claude Desktop
 
-Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows). If the file already has an `mcpServers` block, merge into it:
+Edit the config file:
+
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+If the file already has an `mcpServers` block, merge this entry into it:
 
 ```json
 {
@@ -68,22 +98,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 
 Restart Claude Desktop. The eight tools below are now callable in any chat.
 
-## Wire into Claude Code
-
-`.claude/mcp_servers.json` in your project root (or merge into your global config):
-
-```json
-{
-  "mcpServers": {
-    "ridango-kb-2": {
-      "command": "uv",
-      "args": ["--directory", "/abs/path/to/Ridango-Sales-MCP", "run", "kb2", "mcp", "serve"]
-    }
-  }
-}
-```
-
-The server reads `KB2_DATABASE_URL` from `.env` next to the project, so you don't have to put credentials into the JSON config.
+> Why `env` on Desktop but not Code? Claude Desktop launches the server from a fresh process tree without your shell's working directory, so `.env` doesn't get auto-loaded — you set credentials inline. Claude Code spawns from a context that picks up the repo's `.env`.
 
 ## Tools exposed
 
